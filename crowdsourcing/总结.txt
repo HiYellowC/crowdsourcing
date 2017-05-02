@@ -1,0 +1,118 @@
+0308之前:
+		构想功能需求，了解技术盲点。通过视频、文档大致了解一下maven、springMVC、mybatis、
+	cropper、webuploader、shiro、nginx这些可能用到的工具或框架。没太深入，等开始项目后遇到
+	问题再琢磨...
+
+0308：
+		开工！
+		1.借助maven工具快速构建项目，maven目前来说最直观的好处就是管理jar包
+		项目模块：
+			crowdsourcing-parent（其他所有模块工程的直接或间接”父类“,管理项目中所有jar包的版本号，pom）
+			|
+			crowdsourcing-common（包含其他模块可能用到的公共工具类，jar）
+			crowdsourcing（聚合工程，pom）
+			|
+			crowdsourcing-pojo（jar）
+			crowdsourcing-dao（jar）
+			crowdsourcing-service（jar）
+			crowdsourcing-web（war）
+		2.集成mybatis、spring、springmvc，基本形成MVC架构风格
+		3.测试welcomePage，OK
+		
+0309：
+		1.mysql生产测试表Tb_user,通过mybatis逆向工程生成对应实体类及mapper
+		2为tb_user表增加字段，积分，各个任务的工作数量及有问题的量
+		2.实现userService、userController及简单jsp完成登陆注册功能
+		2.引入shiro框架实现用户认证及密码加密，之前没接触过安全框架，还不是很理解，集成到spring中也bug不断
+		3.验证认证及MD5加密功能,OK
+		4.添加批量加入图片功能，有webuploader插件 post中文乱码的问题
+		
+0310:
+		1.解决中文乱码问题，先用js将数据进行URL编码，后台再URL格式的数据按UTF-8格式解码
+		2.增加tb_image表，新建imageService、imageController，实现保存图片信息功能
+
+0311:
+		1.增加tb_role表，添加shiro授权功能
+		2.添加用户描绘图片边框功能，逻辑还有BUG，如没有合适的图片源，页面不能重定向。顺便标注下：sql语句中<> !=都表示
+	在不为空的前提下不相等。例：select * from tb_image where last_editor_id != 1这是查不出last_editor_id为空的记录
+	的！
+		
+0312:
+		1.解决shiro注解无效的问题，开启shiro注解的配置要放在spring-mvc.xml中！！！并且对于未认证或授权的情况，shiro
+	将抛出异常，所以要在springmvc中配置异常处理！！！
+		2.重构资源文件目录
+		3.重新建立数据库，删除tb_role，将role并到tb_user中，减少了连表查询的麻烦。新建tb_record表，记录用户操作图片记录
+		4.完善用户描绘图片边框功能（task1），新添task2、task3模块，两个模块功能类似，写起来差不多....貌似大体有个样子
+	了。但后台写得很乱，深知没有设计好，shiro的session管理功能不了解还到处用，这得需要借鉴一下大牛的项目，不是多写就能解
+	决的。而且测试是单用户测试逻辑，多用户并发什么的，有没有可能重复编辑...不是可能，是肯定会=_=||再改吧。ps：前端也是
+	丑！
+	
+0314:
+		1.按规范修改代码风格
+
+0315：
+		1.为登陆注册配置拦截器，进行参数校验
+		
+0316:
+		1.轮子造不来，连用都用不来....解决cropper剪裁缩略图显示问题
+		2.重写登陆界面，美化前端
+		
+0317：
+		1.继续昨天的工作，美化界面
+		2.想减少不必要的数据库查询，引入redis作缓存。起了台liunx虚拟机开启redis服务（redis在windows下不能很好兼容），测
+		试代码用Jedis连接，测试成功
+		3.完成redis客户端（单机版）实现类
+		4.实现json工具类用于json相关的类型转换,完成测试
+
+0318:
+		1.为imageService添加redis缓存服务，查询tbImage表的频率减少一半
+		2.为recordService添加redis缓存服务
+		
+0319:
+		1.重建数据表，增添若干项，为写用户管理做准备
+		2.通过redis为正在编辑的图片“加锁”，防止重复编辑
+
+0320：
+		1.完善“加锁”功能，mark一下：spring和springmvc父子容器的关系，springmvc作为子容器配置的对象访问
+	不到spring容器中配置的属性！！！解决方法：在springmvc配置文件中也配置加载该属性文件或者从service层get过来
+		2.为了更好的条件控制和代码复用，实现请求响应类CrowdsourcingResult。注：如果某类的实例将通过jackson转化为json数据，
+		其属性必须有get方法
+	
+0322:
+		1.用户管理模块：完成用户信息展示
+		2.用户管理模块：完成用户删除
+		3.用户管理模块：完成用户锁定与解锁
+		4.暂时去除用户删除功能，欠考虑了，tbRecord表中还存在外键关联用户表，是否给予admin删除用户权限还有待考虑
+		5.实现自定义shiro的AuthorizationFilter，到达逻辑或授权管理验证的目的
+		
+0324:
+		1.用户管理模块： 添加搜索功能
+		2.将项目发布到阿里云服务器上
+		
+0326:
+		1.借助require.js管理js依赖
+		2.学习r.js工具打包压缩资源文件
+		3.服务器被挖币程序入侵，各种方法各种试，无果，最后磁盘初始化，泪目....wnTKYg!!!
+		
+0328:
+		1.实现RegexUtil正则工具类
+		2.实现TaskPageInterceptor进行请求任务界面的参数校验
+		
+0329:
+		1.重写Service和controller层，遵循 异常统一由controller层处理
+		2.实现个人中心部分展示
+0407:
+		1.实现相似图片去重功能（PHash算法）
+		
+0412：
+		1.实现图片下载功能
+		
+0419：
+		1.为tb_user增添permission字段 表明用户是否有相应任务的工作权限
+		2.修改TaskPageInterceptor拦截器
+		2.实现任务一训练模块，通过计算两个矩形框的交叠率判断工作是否合格
+		
+0420:
+		1.实现任务二训练模块
+		2.实现任务三训练模块
+		3.实现PermissionInterceptor拦截器检验请求url

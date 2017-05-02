@@ -1,0 +1,5 @@
+com\crowdsourcing\jedis\JedisClient.class
+com\crowdsourcing\service\ImageService.class
+com\crowdsourcing\service\UserService.class
+com\crowdsourcing\service\RecordService.class
+com\crowdsourcing\jedis\impl\JedisClientSingle.class

@@ -1,0 +1,13 @@
+com\crowdsourcing\interceptor\ImageListInterceptor.class
+com\crowdsourcing\interceptor\PermissionInterceptor.class
+com\crowdsourcing\interceptor\TaskInterceptor.class
+com\crowdsourcing\filter\XSSFilter.class
+com\crowdsourcing\controller\UserController.class
+com\crowdsourcing\controller\ImageController.class
+com\crowdsourcing\interceptor\LoginInterceptor.class
+com\crowdsourcing\interceptor\RegisterInterceptor.class
+com\crowdsourcing\controller\PageController.class
+com\crowdsourcing\realm\MyRealm.class
+com\crowdsourcing\interceptor\TaskPageInterceptor.class
+com\crowdsourcing\filter\MyRolesAuthorizationFilter.class
+com\crowdsourcing\request\wrapper\XSSRequestWrapper.class

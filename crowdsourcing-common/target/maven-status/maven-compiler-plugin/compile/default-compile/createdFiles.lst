@@ -1,0 +1,7 @@
+com\crowdsourcing\common\pojo\Rectangle.class
+com\crowdsourcing\common\util\StreamUtil.class
+com\crowdsourcing\common\pojo\CrowdsourcingResult.class
+com\crowdsourcing\common\util\JsonUtil.class
+com\crowdsourcing\common\util\RegexUtil.class
+com\crowdsourcing\common\util\StringUtil.class
+com\crowdsourcing\common\util\ImageUtil.class

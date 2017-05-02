@@ -1,0 +1,21 @@
+package com.crowdsourcing.jedis;
+
+import java.util.List;
+
+public interface JedisClient {
+
+	public String set(String key, String value);
+	public String get(String key);
+	public Long del(String key);
+	public Long hset(String key, String item, String value);
+	public String hget(String key, String item);
+	public Long lpush(String key, String value);
+	public Long llen(String key);
+	public List<String> lrange(String key, int start, int end);
+	public Long incr(String key);
+	public Long decr(String key);
+	public Long expire(String key, int second);
+	public Long ttl(String key);
+	public Long hdel(String key, String item);
+	public boolean exists(String key);
+}

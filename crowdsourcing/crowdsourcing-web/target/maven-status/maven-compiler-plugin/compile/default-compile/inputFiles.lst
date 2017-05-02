@@ -1,0 +1,13 @@
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\controller\ImageController.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\request\wrapper\XSSRequestWrapper.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\LoginInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\realm\MyRealm.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\controller\PageController.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\filter\MyRolesAuthorizationFilter.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\TaskInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\ImageListInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\RegisterInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\TaskPageInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\interceptor\PermissionInterceptor.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\filter\XSSFilter.java
+F:\workspace\crowdsourcing\crowdsourcing-web\src\main\java\com\crowdsourcing\controller\UserController.java

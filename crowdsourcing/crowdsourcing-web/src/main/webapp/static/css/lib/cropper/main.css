@@ -1,0 +1,51 @@
+
+
+
+/* Content */
+
+
+
+.img-container,
+.img-preview {
+  background-color: #f7f7f7;
+  width: 100%;
+  text-align: center;
+}
+
+.img-container {
+  min-height: 0px;
+  max-height: none;
+  min-width: 0px;
+  max-height: none;
+}
+
+@media (min-width: 768px) {
+  .img-container {
+    min-height: 200px;
+  }
+}
+
+.img-container > img {
+  max-width: 100%;
+}
+
+.docs-preview {
+  margin-right: -15px;
+}
+
+.img-preview {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.img-preview > img {
+  max-width: 100%;
+}
+
+.preview-lg {
+  width: 263px;
+  height: 148px;
+}
+
