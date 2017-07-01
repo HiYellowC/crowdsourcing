@@ -1,9 +1,0 @@
-diff a/crowdsourcing/总结.txt b/crowdsourcing/总结.txt	(rejected hunks)
-@@ -116,4 +116,5 @@
- 		1.ʵ�������ѵ��ģ��
- 		2.ʵ��������ѵ��ģ��
-\ No newline at end of file
-+		3.ʵ��PermissionInterceptor��������������url
- 
- ----The end---
-\ No newline at end of file
