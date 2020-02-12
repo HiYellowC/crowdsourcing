@@ -1,6 +1,8 @@
 package com.crowdsourcing.controller;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,6 +46,13 @@ import com.crowdsourcing.jedis.JedisClient;
 import com.crowdsourcing.common.pojo.CrowdsourcingResult;
 import com.crowdsourcing.common.pojo.Rectangle;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+import java.io.DataOutputStream;
+
 @Controller
 @RequestMapping("/image")
 public class ImageController {
@@ -69,9 +79,9 @@ public class ImageController {
 	 */
 	@RequestMapping("/save")
 	@ResponseBody
-	public CrowdsourcingResult save(String name, String keyword, String keycode, HttpServletRequest request) {
+	public CrowdsourcingResult save(String name, String requireRound, String keycode, HttpServletRequest request) {
 		try {
-			keyword = URLDecoder.decode(keyword, "UTF-8");
+		    requireRound = URLDecoder.decode(requireRound, "UTF-8");
 			name = URLDecoder.decode(name, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			return CrowdsourcingResult.build(500, "编码异常");
@@ -121,7 +131,7 @@ public class ImageController {
 		Subject subject = SecurityUtils.getSubject();
 		Long id = (Long) subject.getSession().getAttribute("id");
 		try {
-			imageService.saveImage(name, bytes, keyword, id);
+			imageService.saveImage(name, bytes, Long.parseLong(requireRound), id);
 		} catch (Exception e) {
 			return CrowdsourcingResult.build(500, e.toString());
 		}
@@ -152,8 +162,18 @@ public class ImageController {
 		}
 
 		Map<String, Object> info = new HashMap<>();
-		info.put("keyword", tbImage.getKeyword());
+		info.put("round", tbImage.getRound());
 		info.put("id", tbImage.getId());
+		// 任务二需要将上一个标注框类别附上
+		if (taskId == 2) {
+		    List<TbRecord> tbRecords = recordService.getNullIsPassRecords(tbImage.getId(), tbImage.getRound());
+		    if (tbRecords.size() != 1) {
+		        model.addAttribute("errorInfo", "获取标注发生错误");
+	            return "failure";
+		    }
+		    info.put("cls", tbRecords.get(0).getCls());
+		    info.put("recordId", tbRecords.get(0).getId());
+		}
 		model.addAttribute("info", info);
 
 		return "image/image-task" + taskId;
@@ -164,13 +184,26 @@ public class ImageController {
 	 */
 	@RequestMapping("/task1")
 	@ResponseBody
-	public CrowdsourcingResult task1(Rectangle rectangle) {
-
+	public CrowdsourcingResult task1(Rectangle rectangle, Long round, String cls) {
+	    
+	    // 以下操作应该保证是线程安全的，待完善
+	    
+	    // 查看操作是否超时
+	    if (!imageService.findImageByRoundAndStep(rectangle.getId(), round, 1))
+	        return CrowdsourcingResult.build(201, "操作操时");
+	    
+	    
+	    try {
+            cls = URLDecoder.decode(cls, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return CrowdsourcingResult.build(500, "编码异常");
+        }
+	    
 		Session session = SecurityUtils.getSubject().getSession();
 		Long editorId = (Long) session.getAttribute("id");
 
 		try {
-			imageService.saveTask1(editorId, rectangle);
+			imageService.saveTask1(editorId, rectangle, cls, round);
 		} catch (Exception e) {
 			return CrowdsourcingResult.build(500, e.toString());
 		}
@@ -184,36 +217,20 @@ public class ImageController {
 	 */
 	@RequestMapping("/task2")
 	@ResponseBody
-	public CrowdsourcingResult task2(Long id, String isPass) {
+	public CrowdsourcingResult task2(Long id, String isPass, Long recordId, Long round) {
 
 		Session session = SecurityUtils.getSubject().getSession();
 		Long editorId = (Long) session.getAttribute("id");
-		TbRecord tbRecord = recordService.getRecordByImageId(id);
+		TbRecord tbRecord = recordService.geTbRecordById(recordId);
 		Rectangle rectangle = new Rectangle(id, tbRecord.getX(), tbRecord.getY(), tbRecord.getWidth(),
 				tbRecord.getHeight());
-
-		TbImage tbImage = imageService.getImageById(id);
-
-		if ("pass".equals(isPass)) {
-			byte[] data = null;
-			try {
-				data = ImageUtil.imageDrawLine(tbImage.getData(), rectangle.getX(), rectangle.getY(),
-						rectangle.getWidth(), rectangle.getHeight(), Color.GREEN);
-			} catch (IOException e) {
-				return CrowdsourcingResult.build(500, "IO异常");
-			}
-			try {
-				imageService.saveTask2(editorId, rectangle, data, tbRecord.getEditorId());
-			} catch (Exception e) {
-				return CrowdsourcingResult.build(500, e.toString());
-			}
-		} else {
-			try {
-				imageService.saveTask2(editorId, rectangle, tbRecord.getEditorId());
-			} catch (Exception e) {
-				return CrowdsourcingResult.build(500, e.toString());
-			}
-		}
+		
+		boolean tmp = "pass".equals(isPass) ? true : false;
+		try {
+            imageService.saveTask2(editorId, rectangle, tbRecord.getEditorId(), tmp, recordId, round);
+        } catch (Exception e) {
+            return CrowdsourcingResult.build(500, e.toString());
+        }
 
 		return CrowdsourcingResult.ok();
 	}
@@ -223,13 +240,13 @@ public class ImageController {
 	 */
 	@RequestMapping("/task3")
 	@ResponseBody
-	public CrowdsourcingResult task3(Long id, String isPass) {
+	public CrowdsourcingResult task3(Long id, String isPass, Long round) {
 
 		Session session = SecurityUtils.getSubject().getSession();
 		Long userId = (Long) session.getAttribute("id");
 
 		try {
-			imageService.saveTask3(userId, id, "pass".equals(isPass));
+			imageService.saveTask3(userId, id, "pass".equals(isPass), round);
 		} catch (Exception e) {
 			return CrowdsourcingResult.build(500, e.toString());
 		}
@@ -264,7 +281,8 @@ public class ImageController {
 	 * 响应图片请求
 	 */
 	@RequestMapping("/showProcessedImage")
-	public void showProcessedImage(@RequestParam(value = "id", defaultValue = "0") Long id,
+	public void showProcessedImage(@RequestParam(value = "id", defaultValue = "0") Long id, 
+	        @RequestParam(value = "round") Long round,
 			HttpServletResponse response) {
 
 		TbImage tbImage = imageService.getImageById(id);
@@ -272,12 +290,19 @@ public class ImageController {
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment;filename=" + tbImage.getImagename());
 		
-		TbRecord tbRecord = recordService.getRecordByImageId(id);
-		byte[] bytes = null;
+		List<TbRecord> tbRecords = recordService.getRecords(id, round);
+		byte[] bytes = tbImage.getData();
 
 		try {
-			bytes = ImageUtil.imageDrawLine(tbImage.getData(), tbRecord.getX(), tbRecord.getY(), tbRecord.getWidth(),
-					tbRecord.getHeight(), Color.YELLOW);
+		    for (TbRecord tbRecord : tbRecords) {
+		        if (tbRecord.getIsPass() == null) {
+		            bytes = ImageUtil.imageDrawLine(bytes, tbRecord.getX(), tbRecord.getY(), tbRecord.getWidth(),
+		                    tbRecord.getHeight(), Color.YELLOW);
+		        } else if (tbRecord.getIsPass() == true){
+		            bytes = ImageUtil.imageDrawLine(bytes, tbRecord.getX(), tbRecord.getY(), tbRecord.getWidth(),
+                            tbRecord.getHeight(), Color.GREEN);
+		        }
+		    }
 		} catch (IOException e) {
 
 			/** 图片加工异常处理 **/
@@ -305,22 +330,20 @@ public class ImageController {
 	@RequestMapping("/list")
 	@ResponseBody
 	public CrowdsourcingResult list(String keyword, String date) {
-		
-		try {
-			keyword = URLDecoder.decode(keyword, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return CrowdsourcingResult.build(500, "编码异常");
-		}
+//		try {
+//			keyword = URLDecoder.decode(keyword, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			return CrowdsourcingResult.build(500, "编码异常");
+//		}
 		
 		List<Long> list = null;
 		
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			list = imageService.getIdOfImages(keyword, dateFormat.parse(date), 4);
+			list = imageService.getIdOfImages(dateFormat.parse(date), 4);
 		} catch (Exception e) {
 			return CrowdsourcingResult.build(500, e.toString());
 		}
-		
 		return CrowdsourcingResult.build(200, "", list);
 	}
 	
@@ -328,12 +351,12 @@ public class ImageController {
 	 * 图片打包下载
 	 */
 	@RequestMapping("/zip")
-	public void zip(String keyword, String date, HttpServletResponse response) {
+	public void zip(String date, HttpServletResponse response) {
 		
-		try {
-			keyword = URLDecoder.decode(keyword, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-		}
+//		try {
+//			keyword = URLDecoder.decode(keyword, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//		}
 		
 		response.setContentType("application/zip");
 		response.setCharacterEncoding("utf-8");
@@ -342,7 +365,7 @@ public class ImageController {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		List<TbImage> list = null;
 		try {
-			list = imageService.getImages(keyword, dateFormat.parse(date), 4);
+			list = imageService.getImages(dateFormat.parse(date), 4);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
@@ -362,6 +385,59 @@ public class ImageController {
 				ZipEntry zipEntry = new ZipEntry(imageName);
 				zipOutputStream.putNextEntry(zipEntry);
 				zipOutputStream.write(tbImage.getData(), 0, tbImage.getData().length);
+				
+				// 添加重复标签标签xml文件
+				String tmp[] = imageName.split("\\.");
+                String xmlName = "";
+                for (int j = 0; j < tmp.length - 1; j++) {
+                    xmlName = xmlName + tmp[j] + ".";
+                }
+                xmlName += "xml";
+				
+				Long require_round = tbImage.getRequireRound();
+				for (Long round = (long)1; round <= require_round; round++) {
+				    String roundXmlName = "round_" + round.toString() + "_" + xmlName;
+				    
+				    Document annotation = DocumentHelper.createDocument();
+	                annotation.setXMLEncoding("UTF-8");
+	                Element root = annotation.addElement("annotation");
+	                
+	                Element filename = root.addElement("filename");
+	                filename.addText(imageName);
+	                
+	                // bytes 转 stream
+	                InputStream imageInputStream = new ByteArrayInputStream(tbImage.getData());
+	                BufferedImage image = ImageIO.read(imageInputStream);
+	                
+	                Element size = root.addElement("size");
+	                size.addElement("width").addText("" + image.getWidth());
+	                size.addElement("height").addText("" + image.getHeight());
+	                size.addElement("depth").addText("3");
+	                
+	                // 获取该轮所有任务一标注
+	                List<TbRecord> tbRecords = recordService.getRecords(tbImage.getId(), round);
+	                for (TbRecord tbRecord : tbRecords) {
+	                    Element object = root.addElement("object");
+	                    object.addElement("name").addText(tbRecord.getCls());
+	                    object.addElement("editor").addText("" + tbRecord.getEditorId());
+	                    Element bndbox = object.addElement("bndbox");
+	                    bndbox.addElement("xmin").addText("" + tbRecord.getX().intValue());
+	                    bndbox.addElement("ymin").addText("" + tbRecord.getY().intValue());
+	                    bndbox.addElement("xmax").addText("" + (tbRecord.getX().intValue() + tbRecord.getWidth().intValue()));
+	                    bndbox.addElement("ymax").addText("" + (tbRecord.getY().intValue() + tbRecord.getHeight().intValue()));
+	                }
+	                
+	                // 添加到zip中
+	                zipEntry = new ZipEntry(roundXmlName);
+	                zipOutputStream.putNextEntry(zipEntry);
+	                
+	                OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+	                outputFormat.setEncoding("UTF-8");
+	                XMLWriter writer = new XMLWriter(new DataOutputStream(zipOutputStream), outputFormat);
+	                writer.setEscapeText(false);
+	                writer.write(annotation);
+				}
+				
 			}
 		} catch (IOException e) {
 			

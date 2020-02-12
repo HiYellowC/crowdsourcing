@@ -14,6 +14,11 @@
 			<artifactId>crowdsourcing-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<dependency>
+		    <groupId>dom4j</groupId>
+		    <artifactId>dom4j</artifactId>
+		</dependency>
 		<!-- shiro -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>

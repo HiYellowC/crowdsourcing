@@ -20,6 +20,7 @@
 		<i class="fa fa-angle-right"></i> 图片下载
 	</h3><br>
 	<div>
+	    <!-- 
 		<div
 			style="width: 30%; float: left; margin-left: 10px; margin-right: 10px">
 			<div class="input-group">
@@ -27,6 +28,7 @@
 					type="text" class="form-control" placeholder="图片的关键字" />
 			</div>
 		</div>
+		 -->
 		<div
 			style="width: 30%; float: left; margin-left: 10px; margin-right: 10px">
 			<div class="input-group">

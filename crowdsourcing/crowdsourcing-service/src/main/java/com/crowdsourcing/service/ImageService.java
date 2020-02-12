@@ -18,6 +18,7 @@ import com.crowdsourcing.mapper.TbImageMapper;
 import com.crowdsourcing.pojo.TbImage;
 import com.crowdsourcing.pojo.TbImageExample;
 import com.crowdsourcing.pojo.TbImageExample.Criteria;
+import com.sun.jdi.LongValue;
 
 @Service
 public class ImageService {
@@ -40,12 +41,13 @@ public class ImageService {
 	@Value("${UNAVAILABLE_IMAGE_KEY}")
 	private String UNAVAILABLE_IMAGE_KEY;
 	
-	public void saveImage(String imagename, byte[] data, String keyword, Long createUserId) 
+	public void saveImage(String imagename, byte[] data, Long requireRound, Long createUserId) 
 			throws Exception{
 		TbImage image = new TbImage();
 		
 		image.setImagename(imagename);
-		image.setKeyword(keyword);
+		image.setRound((long)1);
+		image.setRequireRound(requireRound);
 		image.setData(data);
 		image.setStep(3);
 		image.setCreateUserId(createUserId);
@@ -95,35 +97,56 @@ public class ImageService {
 		return null;
 	}
 	
-	public void saveTask1(Long id, Rectangle rectangle) throws Exception{
-		
+	public boolean findImageByRoundAndStep(Long id, Long round, int step) {
+	    TbImage tbImage = tbImageMapper.selectByPrimaryKey(id);
+	    if (tbImage.getRound() != round || tbImage.getStep() != step) {
+	        return false;
+	    } else {
+	        return true;
+	    }
+	}
+	
+	public void saveTask1(Long id, Rectangle rectangle, String cls, Long round) throws Exception{
 		updateImageByIdSelective(rectangle.getId(), 2, id);
-		recordService.saveRecord(1, id, rectangle);
+		recordService.saveRecord(1, id, rectangle, cls, round);
 		userService.updateUserQuantityById(id, 1);
-		
 	}
 	
-	public void saveTask2(Long id, Rectangle rectangle, byte[] data, Long lastEditorId) throws Exception{
-		updateImageByIdWithBLOBs(rectangle.getId(), 3, id, data);
-		recordService.saveRecord(2, id, rectangle, true);
-		userService.updateUserQuantityById(id, 2);
-		userService.updateUserQuantityById(lastEditorId, 5);
+	public void saveTask2(Long id, Rectangle rectangle, Long lastEditorId, boolean isPass, Long recordId, Long round) throws Exception{
+	    if (isPass) {
+	        updateImageByIdSelective(rectangle.getId(), 3, id);
+	        recordService.saveRecord(2, id, rectangle, true, round);
+	        recordService.updateRecordIsPassById(recordId, true);
+	        userService.updateUserQuantityById(id, 2);
+	        userService.updateUserQuantityById(lastEditorId, 5);
+	    } else {
+	        updateImageByIdSelective(rectangle.getId(), 1, id);
+	        recordService.saveRecord(2, id, rectangle, false, round);
+	        recordService.updateRecordIsPassById(recordId, false);
+	        userService.updateUserQuantityById(id, 2);
+	        userService.updateUserQuantityById(lastEditorId, 4);
+	    }
 	}
 	
-	public void saveTask2(Long id, Rectangle rectangle, Long lastEditorId) throws Exception{
-		updateImageByIdSelective(rectangle.getId(), 1, id);
-		recordService.saveRecord(2, id, rectangle, false);
-		userService.updateUserQuantityById(id, 2);
-		userService.updateUserQuantityById(lastEditorId, 4);
-	}
-	
-	public void saveTask3(Long userId, Long imageId, boolean isPass) throws Exception{
+	public void saveTask3(Long userId, Long imageId, boolean isPass, Long round) throws Exception{
+	    TbImage tbImage = tbImageMapper.selectByPrimaryKey(imageId);
+	    Long require_round = tbImage.getRequireRound();
 		if(isPass) {
-			updateImageByIdSelective(imageId, 4, userId);
+		    if (require_round == round) {
+		        updateImageByIdSelective(imageId, 4, userId);
+		    } else {
+		        TbImage image = new TbImage();
+		        image.setId(imageId);
+		        image.setLastEditorId(userId);
+		        // 开启新一轮
+		        image.setRound(round + 1);
+		        image.setGmtModified(new Date());
+		        tbImageMapper.updateByPrimaryKeySelective(image);
+		    }
 		} else {
 			updateImageByIdSelective(imageId, 1, userId);
 		}
-		recordService.saveRecord(3, userId, imageId, isPass);
+		recordService.saveRecord(3, userId, imageId, isPass, round);
 		userService.updateUserQuantityById(userId, 3);
 	}
 	
@@ -168,31 +191,31 @@ public class ImageService {
 		return tbImage;
 	}
 	
-	public List<Long> getIdOfImages(String keyword, Date date, int step) {
+	// 轮数满足要求
+	public List<Long> getIdOfImages(Date date, int step) {
 		TbImageExample tbImageExample = new TbImageExample();
 		Criteria criteria = tbImageExample.createCriteria();
 		criteria.andStepEqualTo(step);
-		criteria.andKeywordEqualTo(keyword);
 		criteria.andGmtCreateGreaterThanOrEqualTo(date);
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
 		calendar.add(Calendar.DATE, 1);
 		criteria.andGmtCreateLessThan(calendar.getTime());
-		List<Long> result = tbImageMapper.selectByExampleOnlyId(tbImageExample);
+		List<Long> result = tbImageMapper.selectByExampleOnlyIdDone(tbImageExample);
 		return result;
 	}
 	
-	public List<TbImage> getImages(String keyword, Date date, int step) {
+	// 轮数满足要求
+	public List<TbImage> getImages(Date date, int step) {
 		TbImageExample tbImageExample = new TbImageExample();
 		Criteria criteria = tbImageExample.createCriteria();
 		criteria.andStepEqualTo(step);
-		criteria.andKeywordEqualTo(keyword);
 		criteria.andGmtCreateGreaterThanOrEqualTo(date);
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
 		calendar.add(Calendar.DATE, 1);
 		criteria.andGmtCreateLessThan(calendar.getTime());
-		List<TbImage> result = tbImageMapper.selectByExampleWithBLOBs(tbImageExample);
+		List<TbImage> result = tbImageMapper.selectByExampleWithBLOBsDone(tbImageExample);
 		return result;
 	}
 	

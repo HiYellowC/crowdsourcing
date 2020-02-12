@@ -14,9 +14,8 @@ public class ImageListInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String keyword = request.getParameter("keyword");
 		String date = request.getParameter("date");
-		if(!StringUtil.isBlankString(keyword) && !StringUtil.isBlankString(date) && StringUtil.isValidDate(date)) {
+		if(!StringUtil.isBlankString(date) && StringUtil.isValidDate(date)) {
 			return true;
 		}
 		return false;

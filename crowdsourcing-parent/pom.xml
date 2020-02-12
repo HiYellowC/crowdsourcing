@@ -33,10 +33,17 @@
 		<quartz.version>2.2.2</quartz.version>
 		<shiro.version>1.2.2</shiro.version>
 		<antisamy.version>1.5.3</antisamy.version>
+		<dom4j.version>1.6.1</dom4j.version>
 	</properties>
 	<!-- 在dependencyManagement中配置的元素是不会引入依赖的，仅仅是它的配置是可继承的 -->
 	<dependencyManagement>
 		<dependencies>
+		    <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+			<dependency>
+			    <groupId>dom4j</groupId>
+			    <artifactId>dom4j</artifactId>
+			    <version>${dom4j.version}</version>
+			</dependency> 
 			<!-- AntiSamy -->
 			<dependency>
 				<groupId>org.owasp.antisamy</groupId>

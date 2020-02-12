@@ -54,7 +54,7 @@ public class UserService {
 	public void updateUserLockById(Long id, boolean lock) throws Exception{
 		TbUser tbUser = new TbUser();
 		tbUser.setId(id);
-		tbUser.setLock(lock);
+		tbUser.setIsLock(lock);
 		tbUser.setGmtModified(new Date());
 		
 		tbUserMapper.updateByPrimaryKeySelective(tbUser);
@@ -100,7 +100,7 @@ public class UserService {
 		user.setPassword(MD5Password);
 		user.setPasswordSalt(passwordSalt);
 		user.setRole("user");
-		user.setLock(false);
+		user.setIsLock(false);
 		user.setScore(0);
 		user.setTask1Quantity(0);
 		user.setTask2Quantity(0);

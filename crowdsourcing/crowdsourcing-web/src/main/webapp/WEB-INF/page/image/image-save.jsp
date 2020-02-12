@@ -26,8 +26,8 @@
 			<h1 id="demo">图片上传</h1>
 			<p>您可以尝试文件拖拽，使用QQ截屏工具，然后激活窗口后粘贴，或者点击添加图片按钮，来完成图片上传</p>
 			<div class="input-group" style="width: 30%">
-				<span class="input-group-addon" id="basic-addon1">关键字</span> <input
-					id="keyword" type="text" class="form-control" placeholder="待识别的关键字"
+				<span class="input-group-addon" id="basic-addon1">标注回合数</span> <input
+					id="requireRound" type="text" class="form-control" placeholder="待标注的回合数"
 					aria-describedby="basic-addon1" />
 			</div>
 			<div class="page-container">

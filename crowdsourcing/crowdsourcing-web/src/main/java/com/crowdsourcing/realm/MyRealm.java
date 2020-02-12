@@ -48,7 +48,7 @@ public class MyRealm extends AuthorizingRealm {
 		if (user == null) {
 			throw new UnknownAccountException();
 		}
-		if (user.getLock()) {
+		if (user.getIsLock()) {
 			throw new LockedAccountException();
 		}
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getUsername(), 

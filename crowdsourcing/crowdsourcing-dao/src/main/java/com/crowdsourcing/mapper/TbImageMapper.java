@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TbImageMapper {
-    int countByExample(TbImageExample example);
+    long countByExample(TbImageExample example);
 
     int deleteByExample(TbImageExample example);
 
@@ -17,10 +17,12 @@ public interface TbImageMapper {
     int insertSelective(TbImage record);
 
     List<TbImage> selectByExampleWithBLOBs(TbImageExample example);
+    
+    List<TbImage> selectByExampleWithBLOBsDone(TbImageExample example);
 
     List<TbImage> selectByExample(TbImageExample example);
     
-    List<Long> selectByExampleOnlyId(TbImageExample example);
+    List<Long> selectByExampleOnlyIdDone(TbImageExample example);
 
     TbImage selectByPrimaryKey(Long id);
 

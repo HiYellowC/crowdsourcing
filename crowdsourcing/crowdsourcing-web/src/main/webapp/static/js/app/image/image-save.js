@@ -400,8 +400,8 @@ require(
 				};
 				/*添加上传附加信息*/
 				uploader.onUploadBeforeSend = function(object, data, headers) {
-					var keyword = $("#keyword").val();
-					data.keyword = encodeURIComponent(keyword);
+					var requireRound = $("#requireRound").val();
+					data.requireRound = encodeURIComponent(requireRound);
 					data.name = encodeURIComponent(data.name);
 					data.keycode = keycode;
 				};
@@ -469,8 +469,9 @@ require(
 				};
 
 				$upload.on('click', function() {
-					if ($("#keyword").val() == "") {
-						alert("please input the keyword");
+					var reg = /^([1-9][0-9]*)$/;
+					if(!reg.test($("#requireRound").val())) {
+						alert("please input the valid number")
 						return false;
 					}
 					if ($(this).hasClass('disabled')) {

@@ -14,27 +14,32 @@
 	<section id="main-content"> <section class="wrapper">
 		<h3>要求描述</h3>
 		<hr>
-		<h4>任务一：描绘边界</h4>
+		<h4>任务一：单目标实体标注</h4>
 		<div>
-			在图片上标注边界框，容括一个未被标注的关键字物体，满足准确性<br>
-			准确性：在容括一个关键字物体的条件下，该边界框要足够小
+			在图片上标注边界框，容括一个未被标注的目标物体并判定类别，具体要求如下：<br>
+			1、在容括一个目标物体所有可见部位的条件下，该边界框要足够小<br>
+			2、只需标注一个目标物体<br>
+			3、不要标注已被边界框包围的目标物体<br>
+			4、正确地判断当前标注目标物体的类别<br>
 			<div class="row" style="padding: 10px">
-				<img style="width:30%;height:30%" src="/static/img/app/1_1.jpg">
-				<img style="width:30%;height:30%" src="/static/img/app/1_2.jpg">
-				<img style="width:30%;height:30%" src="/static/img/app/1_3.jpg">
+				<img style="width:40%;height:40%" src="/static/img/app/1_1.png">
+				<img style="width:40%;height:40%" src="/static/img/app/1_2.png">
+			</div>
+			<div class="row" style="padding: 10px">
+				<img style="width:40%;height:40%" src="/static/img/app/1_3.png">
+				<img style="width:40%;height:40%" src="/static/img/app/1_4.png">
 			</div>
 		</div>
-		<h4>任务二：准确性评测</h4>
+		<h4>任务二：质量评测</h4>
 		<div>
-			评判其他用户的工作是否满足准确性
+			评判上一个用户的工作是否满足要求
 		</div>
 		<h4>任务三：全覆盖评测</h4>
 		<div>
 			评判其他用户的工作是否满足全覆盖<br>
 			全覆盖：任何一个符合要求的目标物体都要标注边界框，不能缺漏
 			<div class="row" style="padding: 10px">
-				<img style="width:30%;height:30%" src="/static/img/app/3_1.jpg">
-				<img style="width:30%;height:30%" src="/static/img/app/3_2.jpg">
+				<img style="width:80%;height:80%" src="/static/img/app/3_1.png">
 			</div>
 		</div>
 	</section>

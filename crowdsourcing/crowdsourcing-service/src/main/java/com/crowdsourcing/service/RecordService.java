@@ -31,12 +31,14 @@ public class RecordService {
 	private String REDIS_RECORD_KEY;
 	
 	
-	public void saveRecord(int step, Long editorId, Rectangle rectangle) throws JsonProcessingException {
+	public void saveRecord(int step, Long editorId, Rectangle rectangle, String cls, Long round) throws JsonProcessingException {
 		TbRecord tbRecord = new TbRecord();
 		
 		tbRecord.setStep(step);
 		tbRecord.setEditorId(editorId);
 		tbRecord.setRectangle(rectangle);
+		tbRecord.setCls(cls);
+		tbRecord.setRound(round);
 		tbRecord.setGmtCreate(new Date());
 		tbRecord.setGmtModified(new Date());
 		
@@ -48,13 +50,14 @@ public class RecordService {
 		
 	}
 	
-	public void saveRecord(int step, Long editorId, Rectangle rectangle, boolean isPass) {
+	public void saveRecord(int step, Long editorId, Rectangle rectangle, boolean isPass, Long round) {
 		TbRecord tbRecord = new TbRecord();
 		
 		tbRecord.setStep(step);
 		tbRecord.setEditorId(editorId);
 		tbRecord.setRectangle(rectangle);
-		tbRecord.setPass(isPass);
+		tbRecord.setIsPass(isPass);
+		tbRecord.setRound(round);
 		tbRecord.setGmtCreate(new Date());
 		tbRecord.setGmtModified(new Date());
 		
@@ -62,19 +65,63 @@ public class RecordService {
 		
 	}
 	
-	public void saveRecord(int step, Long editorId, Long imageId, boolean isPass) {
+	public void saveRecord(int step, Long editorId, Long imageId, boolean isPass, Long round) {
 		
 		TbRecord tbRecord = new TbRecord();
 		
 		tbRecord.setStep(step);
 		tbRecord.setEditorId(editorId);
 		tbRecord.setImageId(imageId);
-		tbRecord.setPass(isPass);
+		tbRecord.setIsPass(isPass);
+		tbRecord.setRound(round);
 		tbRecord.setGmtCreate(new Date());
 		tbRecord.setGmtModified(new Date());
 		
 		tbRecordMapper.insert(tbRecord);
 		
+	}
+	
+	// 更新任务一标注检验结果
+	public void updateRecordIsPassById(Long id, boolean isPass) {
+	    TbRecord tbRecord = new TbRecord();
+	    tbRecord.setId(id);
+	    tbRecord.setIsPass(isPass);
+	    tbRecord.setGmtModified(new Date());
+	    tbRecordMapper.updateByPrimaryKeySelective(tbRecord);
+	}
+	
+	// 显示未评测的标注
+	public List<TbRecord> getNullIsPassRecords(Long imageId, Long round) {
+	    TbRecordExample tbRecordExample = new TbRecordExample();
+        Criteria criteria = tbRecordExample.createCriteria();
+        criteria.andImageIdEqualTo(imageId);
+        criteria.andRoundEqualTo(round);
+        criteria.andStepEqualTo(1);
+        criteria.andIsPassIsNull();
+        
+        return tbRecordMapper.selectByExample(tbRecordExample);
+	}
+	
+	// 显示符合要求的框
+	public List<TbRecord> getRecords(Long imageId, Long round) {
+	    TbRecordExample tbRecordExample = new TbRecordExample();
+	    Criteria criteria1 = tbRecordExample.createCriteria();
+	    criteria1.andImageIdEqualTo(imageId);
+	    criteria1.andRoundEqualTo(round);
+	    criteria1.andStepEqualTo(1);
+	    criteria1.andIsPassEqualTo(true);
+	    Criteria criteria2 = tbRecordExample.or();
+	    criteria2.andImageIdEqualTo(imageId);
+        criteria2.andRoundEqualTo(round);
+        criteria2.andStepEqualTo(1);
+        criteria2.andIsPassIsNull();
+	    
+        return tbRecordMapper.selectByExample(tbRecordExample);
+	    
+	}
+	
+	public TbRecord geTbRecordById(Long Id) {
+	    return tbRecordMapper.selectByPrimaryKey(Id);
 	}
 	
 	public TbRecord getRecordByImageId(Long imageId) {

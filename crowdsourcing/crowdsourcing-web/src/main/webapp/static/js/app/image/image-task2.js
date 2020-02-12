@@ -7,14 +7,18 @@ require.config({
 require(['jquery'], function($) {
 	$(document).ready(function() {
 		var imageId = $('#imageId').attr('value');
-		$('#image').attr('src', '/image/showProcessedImage?id=' + imageId +'&p=' + Math.random());
-		$('.btn').click(function() {
+		var recordId = $('#recordId').attr('value');
+		var round = $('#round').attr('value');
+		$('#image').attr('src', '/image/showProcessedImage?id=' + imageId + '&round=' + round + '&p=' + Math.random());
+		$('#pass, #noPass').click(function() {
 			var choice = $(this).attr('id');
 			$.ajax({
 				url: "/image/task2",
 				data: {
 					id: imageId,
-					isPass: choice
+					isPass: choice,
+					recordId: recordId,
+					round: round
 				},
 				success: function(result) {
 					if(result.status == 200) {
@@ -27,6 +31,9 @@ require(['jquery'], function($) {
 					}
 				}
 			});
+		});
+		$('#sample').click(function(){
+			location.href = "/";
 		});
 	});
 });

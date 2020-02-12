@@ -1,38 +1,39 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.crowdsourcing.mapper.TbImageMapper" >
-  <resultMap id="BaseResultMap" type="com.crowdsourcing.pojo.TbImage" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="imagename" property="imagename" jdbcType="VARCHAR" />
-    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
-    <result column="step" property="step" jdbcType="INTEGER" />
-    <result column="last_editor_id" property="lastEditorId" jdbcType="BIGINT" />
-    <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
-    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
-    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crowdsourcing.mapper.TbImageMapper">
+  <resultMap id="BaseResultMap" type="com.crowdsourcing.pojo.TbImage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="imagename" jdbcType="VARCHAR" property="imagename" />
+    <result column="step" jdbcType="INTEGER" property="step" />
+    <result column="last_editor_id" jdbcType="BIGINT" property="lastEditorId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="require_round" jdbcType="BIGINT" property="requireRound" />
+    <result column="round" jdbcType="BIGINT" property="round" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.crowdsourcing.pojo.TbImage" extends="BaseResultMap" >
-    <result column="data" property="data" jdbcType="LONGVARBINARY" />
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.crowdsourcing.pojo.TbImage">
+    <result column="data" jdbcType="LONGVARBINARY" property="data" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -43,25 +44,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -72,45 +73,67 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    id, imagename, keyword, step, last_editor_id, create_user_id, gmt_create, gmt_modified
+  <sql id="Base_Column_List">
+    id, imagename, step, last_editor_id, create_user_id, gmt_create, gmt_modified, require_round, 
+    round
   </sql>
-  <sql id="Blob_Column_List" >
+  <sql id="Blob_Column_List">
     data
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.crowdsourcing.pojo.TbImageExample" >
+  <select id="selectByExampleWithBLOBs" parameterType="com.crowdsourcing.pojo.TbImageExample" resultMap="ResultMapWithBLOBs">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from tb_image
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crowdsourcing.pojo.TbImageExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from tb_image
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
   
-  <!-- HYC 只查找id-->
-  <select id="selectByExampleOnlyId" resultType="java.lang.Long" parameterType="com.crowdsourcing.pojo.TbImageExample" >
+  <!-- HYC 轮数满足要求 -->
+  <select id="selectByExampleWithBLOBsDone" parameterType="com.crowdsourcing.pojo.TbImageExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_image
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+      and
+    </if>
+    round = require_round
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="selectByExample" parameterType="com.crowdsourcing.pojo.TbImageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_image
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <!-- HYC 只查找id 轮数满足要求-->
+  <select id="selectByExampleOnlyIdDone" resultType="java.lang.Long" parameterType="com.crowdsourcing.pojo.TbImageExample" >
     select
     <if test="distinct" >
       distinct
@@ -119,13 +142,15 @@
     from tb_image
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
+      and
     </if>
+    round = require_round
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
   </select>
   
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -133,208 +158,224 @@
     from tb_image
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_image
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.crowdsourcing.pojo.TbImageExample" >
+  <delete id="deleteByExample" parameterType="com.crowdsourcing.pojo.TbImageExample">
     delete from tb_image
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.crowdsourcing.pojo.TbImage" >
-    insert into tb_image (id, imagename, keyword, 
-      step, last_editor_id, create_user_id, 
-      gmt_create, gmt_modified, data
-      )
-    values (#{id,jdbcType=BIGINT}, #{imagename,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, 
-      #{step,jdbcType=INTEGER}, #{lastEditorId,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, 
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARBINARY}
-      )
+  <insert id="insert" parameterType="com.crowdsourcing.pojo.TbImage">
+    insert into tb_image (id, imagename, step, 
+      last_editor_id, create_user_id, gmt_create, 
+      gmt_modified, require_round, round, 
+      data)
+    values (#{id,jdbcType=BIGINT}, #{imagename,jdbcType=VARCHAR}, #{step,jdbcType=INTEGER}, 
+      #{lastEditorId,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP}, #{requireRound,jdbcType=BIGINT}, #{round,jdbcType=BIGINT}, 
+      #{data,jdbcType=LONGVARBINARY})
   </insert>
-  <insert id="insertSelective" parameterType="com.crowdsourcing.pojo.TbImage" >
+  <insert id="insertSelective" parameterType="com.crowdsourcing.pojo.TbImage">
     insert into tb_image
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="imagename != null" >
+      <if test="imagename != null">
         imagename,
       </if>
-      <if test="keyword != null" >
-        keyword,
-      </if>
-      <if test="step != null" >
+      <if test="step != null">
         step,
       </if>
-      <if test="lastEditorId != null" >
+      <if test="lastEditorId != null">
         last_editor_id,
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         create_user_id,
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         gmt_create,
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         gmt_modified,
       </if>
-      <if test="data != null" >
+      <if test="requireRound != null">
+        require_round,
+      </if>
+      <if test="round != null">
+        round,
+      </if>
+      <if test="data != null">
         data,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="imagename != null" >
+      <if test="imagename != null">
         #{imagename,jdbcType=VARCHAR},
       </if>
-      <if test="keyword != null" >
-        #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="step != null" >
+      <if test="step != null">
         #{step,jdbcType=INTEGER},
       </if>
-      <if test="lastEditorId != null" >
+      <if test="lastEditorId != null">
         #{lastEditorId,jdbcType=BIGINT},
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         #{createUserId,jdbcType=BIGINT},
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="data != null" >
+      <if test="requireRound != null">
+        #{requireRound,jdbcType=BIGINT},
+      </if>
+      <if test="round != null">
+        #{round,jdbcType=BIGINT},
+      </if>
+      <if test="data != null">
         #{data,jdbcType=LONGVARBINARY},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.crowdsourcing.pojo.TbImageExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.crowdsourcing.pojo.TbImageExample" resultType="java.lang.Long">
     select count(*) from tb_image
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update tb_image
-    <set >
-      <if test="record.id != null" >
+    <set>
+      <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.imagename != null" >
+      <if test="record.imagename != null">
         imagename = #{record.imagename,jdbcType=VARCHAR},
       </if>
-      <if test="record.keyword != null" >
-        keyword = #{record.keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="record.step != null" >
+      <if test="record.step != null">
         step = #{record.step,jdbcType=INTEGER},
       </if>
-      <if test="record.lastEditorId != null" >
+      <if test="record.lastEditorId != null">
         last_editor_id = #{record.lastEditorId,jdbcType=BIGINT},
       </if>
-      <if test="record.createUserId != null" >
+      <if test="record.createUserId != null">
         create_user_id = #{record.createUserId,jdbcType=BIGINT},
       </if>
-      <if test="record.gmtCreate != null" >
+      <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.gmtModified != null" >
+      <if test="record.gmtModified != null">
         gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.data != null" >
+      <if test="record.requireRound != null">
+        require_round = #{record.requireRound,jdbcType=BIGINT},
+      </if>
+      <if test="record.round != null">
+        round = #{record.round,jdbcType=BIGINT},
+      </if>
+      <if test="record.data != null">
         data = #{record.data,jdbcType=LONGVARBINARY},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
+  <update id="updateByExampleWithBLOBs" parameterType="map">
     update tb_image
     set id = #{record.id,jdbcType=BIGINT},
       imagename = #{record.imagename,jdbcType=VARCHAR},
-      keyword = #{record.keyword,jdbcType=VARCHAR},
       step = #{record.step,jdbcType=INTEGER},
       last_editor_id = #{record.lastEditorId,jdbcType=BIGINT},
       create_user_id = #{record.createUserId,jdbcType=BIGINT},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      require_round = #{record.requireRound,jdbcType=BIGINT},
+      round = #{record.round,jdbcType=BIGINT},
       data = #{record.data,jdbcType=LONGVARBINARY}
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update tb_image
     set id = #{record.id,jdbcType=BIGINT},
       imagename = #{record.imagename,jdbcType=VARCHAR},
-      keyword = #{record.keyword,jdbcType=VARCHAR},
       step = #{record.step,jdbcType=INTEGER},
       last_editor_id = #{record.lastEditorId,jdbcType=BIGINT},
       create_user_id = #{record.createUserId,jdbcType=BIGINT},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      require_round = #{record.requireRound,jdbcType=BIGINT},
+      round = #{record.round,jdbcType=BIGINT}
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.crowdsourcing.pojo.TbImage" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.crowdsourcing.pojo.TbImage">
     update tb_image
-    <set >
-      <if test="imagename != null" >
+    <set>
+      <if test="imagename != null">
         imagename = #{imagename,jdbcType=VARCHAR},
       </if>
-      <if test="keyword != null" >
-        keyword = #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="step != null" >
+      <if test="step != null">
         step = #{step,jdbcType=INTEGER},
       </if>
-      <if test="lastEditorId != null" >
+      <if test="lastEditorId != null">
         last_editor_id = #{lastEditorId,jdbcType=BIGINT},
       </if>
-      <if test="createUserId != null" >
+      <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=BIGINT},
       </if>
-      <if test="gmtCreate != null" >
+      <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="gmtModified != null" >
+      <if test="gmtModified != null">
         gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="data != null" >
+      <if test="requireRound != null">
+        require_round = #{requireRound,jdbcType=BIGINT},
+      </if>
+      <if test="round != null">
+        round = #{round,jdbcType=BIGINT},
+      </if>
+      <if test="data != null">
         data = #{data,jdbcType=LONGVARBINARY},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.crowdsourcing.pojo.TbImage" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.crowdsourcing.pojo.TbImage">
     update tb_image
     set imagename = #{imagename,jdbcType=VARCHAR},
-      keyword = #{keyword,jdbcType=VARCHAR},
       step = #{step,jdbcType=INTEGER},
       last_editor_id = #{lastEditorId,jdbcType=BIGINT},
       create_user_id = #{createUserId,jdbcType=BIGINT},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      require_round = #{requireRound,jdbcType=BIGINT},
+      round = #{round,jdbcType=BIGINT},
       data = #{data,jdbcType=LONGVARBINARY}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.crowdsourcing.pojo.TbImage" >
+  <update id="updateByPrimaryKey" parameterType="com.crowdsourcing.pojo.TbImage">
     update tb_image
     set imagename = #{imagename,jdbcType=VARCHAR},
-      keyword = #{keyword,jdbcType=VARCHAR},
       step = #{step,jdbcType=INTEGER},
       last_editor_id = #{lastEditorId,jdbcType=BIGINT},
       create_user_id = #{createUserId,jdbcType=BIGINT},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      require_round = #{requireRound,jdbcType=BIGINT},
+      round = #{round,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

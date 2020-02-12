@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TbRecordMapper {
-    int countByExample(TbRecordExample example);
+    long countByExample(TbRecordExample example);
 
     int deleteByExample(TbRecordExample example);
 

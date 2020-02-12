@@ -12,7 +12,7 @@ public class TbImageExample {
     protected List<Criteria> oredCriteria;
 
     public TbImageExample() {
-        oredCriteria = new ArrayList<Criteria>();
+        oredCriteria = new ArrayList<>();
     }
 
     public void setOrderByClause(String orderByClause) {
@@ -69,7 +69,7 @@ public class TbImageExample {
 
         protected GeneratedCriteria() {
             super();
-            criteria = new ArrayList<Criterion>();
+            criteria = new ArrayList<>();
         }
 
         public boolean isValid() {
@@ -232,76 +232,6 @@ public class TbImageExample {
 
         public Criteria andImagenameNotBetween(String value1, String value2) {
             addCriterion("imagename not between", value1, value2, "imagename");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordIsNull() {
-            addCriterion("keyword is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordIsNotNull() {
-            addCriterion("keyword is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordEqualTo(String value) {
-            addCriterion("keyword =", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordNotEqualTo(String value) {
-            addCriterion("keyword <>", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordGreaterThan(String value) {
-            addCriterion("keyword >", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordGreaterThanOrEqualTo(String value) {
-            addCriterion("keyword >=", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordLessThan(String value) {
-            addCriterion("keyword <", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordLessThanOrEqualTo(String value) {
-            addCriterion("keyword <=", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordLike(String value) {
-            addCriterion("keyword like", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordNotLike(String value) {
-            addCriterion("keyword not like", value, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordIn(List<String> values) {
-            addCriterion("keyword in", values, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordNotIn(List<String> values) {
-            addCriterion("keyword not in", values, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordBetween(String value1, String value2) {
-            addCriterion("keyword between", value1, value2, "keyword");
-            return (Criteria) this;
-        }
-
-        public Criteria andKeywordNotBetween(String value1, String value2) {
-            addCriterion("keyword not between", value1, value2, "keyword");
             return (Criteria) this;
         }
 
@@ -604,10 +534,129 @@ public class TbImageExample {
             addCriterion("gmt_modified not between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
+
+        public Criteria andRequireRoundIsNull() {
+            addCriterion("require_round is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundIsNotNull() {
+            addCriterion("require_round is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundEqualTo(Long value) {
+            addCriterion("require_round =", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundNotEqualTo(Long value) {
+            addCriterion("require_round <>", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundGreaterThan(Long value) {
+            addCriterion("require_round >", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundGreaterThanOrEqualTo(Long value) {
+            addCriterion("require_round >=", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundLessThan(Long value) {
+            addCriterion("require_round <", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundLessThanOrEqualTo(Long value) {
+            addCriterion("require_round <=", value, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundIn(List<Long> values) {
+            addCriterion("require_round in", values, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundNotIn(List<Long> values) {
+            addCriterion("require_round not in", values, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundBetween(Long value1, Long value2) {
+            addCriterion("require_round between", value1, value2, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequireRoundNotBetween(Long value1, Long value2) {
+            addCriterion("require_round not between", value1, value2, "requireRound");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundIsNull() {
+            addCriterion("round is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundIsNotNull() {
+            addCriterion("round is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundEqualTo(Long value) {
+            addCriterion("round =", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundNotEqualTo(Long value) {
+            addCriterion("round <>", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundGreaterThan(Long value) {
+            addCriterion("round >", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundGreaterThanOrEqualTo(Long value) {
+            addCriterion("round >=", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundLessThan(Long value) {
+            addCriterion("round <", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundLessThanOrEqualTo(Long value) {
+            addCriterion("round <=", value, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundIn(List<Long> values) {
+            addCriterion("round in", values, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundNotIn(List<Long> values) {
+            addCriterion("round not in", values, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundBetween(Long value1, Long value2) {
+            addCriterion("round between", value1, value2, "round");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoundNotBetween(Long value1, Long value2) {
+            addCriterion("round not between", value1, value2, "round");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
-
         protected Criteria() {
             super();
         }

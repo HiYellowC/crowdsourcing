@@ -7,8 +7,6 @@ public class TbImage {
 
     private String imagename;
 
-    private String keyword;
-
     private Integer step;
 
     private Long lastEditorId;
@@ -18,6 +16,10 @@ public class TbImage {
     private Date gmtCreate;
 
     private Date gmtModified;
+
+    private Long requireRound;
+
+    private Long round;
 
     private byte[] data;
 
@@ -35,14 +37,6 @@ public class TbImage {
 
     public void setImagename(String imagename) {
         this.imagename = imagename == null ? null : imagename.trim();
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword == null ? null : keyword.trim();
     }
 
     public Integer getStep() {
@@ -83,6 +77,22 @@ public class TbImage {
 
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public Long getRequireRound() {
+        return requireRound;
+    }
+
+    public void setRequireRound(Long requireRound) {
+        this.requireRound = requireRound;
+    }
+
+    public Long getRound() {
+        return round;
+    }
+
+    public void setRound(Long round) {
+        this.round = round;
     }
 
     public byte[] getData() {

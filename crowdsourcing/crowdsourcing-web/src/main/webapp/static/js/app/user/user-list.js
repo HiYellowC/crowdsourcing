@@ -61,5 +61,5 @@ function statusFormat(value, row, index) {
 	}
 }
 function operateFormat(value, row, index) {
-	return row.lock ? lockOperatorHTML : unlockOperatorHTML;
+	return row.isLock ? lockOperatorHTML : unlockOperatorHTML;
 }

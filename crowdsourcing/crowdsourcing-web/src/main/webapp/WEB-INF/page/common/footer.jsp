@@ -10,7 +10,7 @@
 
 	<footer class="site-footer">
           <div class="text-center">
-              2017 - HiYellowC
+              2020 - HiYellowC
               <a href="#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>

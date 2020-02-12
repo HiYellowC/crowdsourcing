@@ -43,7 +43,7 @@
 							<th data-field="gmtCreate" data-align="center" data-formatter="dateFormat"><i class="fa fa-bookmark"></i> 注册时间</th>
 							<th data-field="email" data-align="center"><i class="fa fa-envelope-o"></i> 电子邮箱</th>
 							<th data-field="role" data-align="center"><i class="fa fa-tags"></i> 用户类型</th>
-							<th data-field="lock" data-align="center" data-formatter="statusFormat"><i class="fa fa-lock"></i> 状态</th>
+							<th data-field="isLock" data-align="center" data-formatter="statusFormat"><i class="fa fa-lock"></i> 状态</th>
 							<th data-field="operate" data-align="center" data-formatter="operateFormat" data-events="operateEvents"><i class="fa fa-edit"></i> 操作</th>
 						</tr>
 					</thead>

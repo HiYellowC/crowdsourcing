@@ -26,22 +26,18 @@ require([ 'jquery', 'fancybox' ], function($, fancybox) {
 	}
 	$('#query').click(function() {
 		$('.row').remove();
-		var keyword = $('#keyword').val();
 		var date = $('#date').val();
-		if (keyword == "")
-			alert("请输入关键字");
-		else if (date == "")
+		if (date == "")
 			alert("请选择日期");
 		else {
 //			$('.wrapper').append("<div id='loading' style='text-align: center'><img src='/static/img/app/loading.gif'/></div>");
 			$.ajax({
 				url : "/image/list",
 				data : {
-					keyword : encodeURIComponent(keyword),
+//					keyword : encodeURIComponent(keyword),
 					date : date
 				},
 				success : function(result) {
-					
 					if (result.status == 200) {
 						if (result.data.length == 0)
 							alert("no result");
@@ -59,19 +55,15 @@ require([ 'jquery', 'fancybox' ], function($, fancybox) {
 	});
 	$('#download').click(
 			function() {
-				var keyword = $('#keyword').val();
+//				var keyword = $('#keyword').val();
 				var date = $('#date').val();
-				keyword = encodeURIComponent(keyword);
-				if (keyword == "") {
-					alert("请输入关键字");
-					return false;
-				} else if (date == "") {
+//				keyword = encodeURIComponent(keyword);
+				if (date == "") {
 					alert("请选择日期");
 					return false;
 				}
 				$('#download').attr(
 						'href',
-						'/image/zip?keyword=' + encodeURIComponent(keyword)
-								+ '&date=' + date);
+						'/image/zip?date=' + date);
 			})
 });

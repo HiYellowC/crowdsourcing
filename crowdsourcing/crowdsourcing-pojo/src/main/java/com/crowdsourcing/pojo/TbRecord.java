@@ -1,7 +1,6 @@
 package com.crowdsourcing.pojo;
 
 import java.util.Date;
-
 import com.crowdsourcing.common.pojo.Rectangle;
 
 public class TbRecord {
@@ -21,26 +20,30 @@ public class TbRecord {
 
     private Double height;
 
-    private Boolean pass;
+    private Boolean isPass;
 
     private Date gmtCreate;
 
     private Date gmtModified;
 
-    public void setRectangle(Rectangle rectangle) {
-    	this.imageId = rectangle.getId();
-    	this.x = rectangle.getX();
-    	this.y = rectangle.getY();
-    	this.width = rectangle.getWidth();
-    	this.height = rectangle.getHeight();
-    }
+    private Long round;
+
+    private String cls;
     
+    public void setRectangle(Rectangle rectangle) {
+        this.imageId = rectangle.getId();
+        this.x = rectangle.getX();
+        this.y = rectangle.getY();
+        this.width = rectangle.getWidth();
+        this.height = rectangle.getHeight();
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+    		this.id = id;
     }
 
     public Integer getStep() {
@@ -99,12 +102,12 @@ public class TbRecord {
         this.height = height;
     }
 
-    public Boolean getPass() {
-        return pass;
+    public Boolean getIsPass() {
+        return isPass;
     }
 
-    public void setPass(Boolean pass) {
-        this.pass = pass;
+    public void setIsPass(Boolean isPass) {
+        this.isPass = isPass;
     }
 
     public Date getGmtCreate() {
@@ -123,13 +126,19 @@ public class TbRecord {
         this.gmtModified = gmtModified;
     }
 
-	@Override
-	public String toString() {
-		return "TbRecord [id=" + id + ", step=" + step + ", editorId=" + editorId + ", imageId=" + imageId + ", x=" + x
-				+ ", y=" + y + ", width=" + width + ", height=" + height + ", pass=" + pass + ", gmtCreate=" + gmtCreate
-				+ ", gmtModified=" + gmtModified + "]";
-	}
-    
-    
-    
+    public Long getRound() {
+        return round;
+    }
+
+    public void setRound(Long round) {
+        this.round = round;
+    }
+
+    public String getCls() {
+        return cls;
+    }
+
+    public void setCls(String cls) {
+        this.cls = cls == null ? null : cls.trim();
+    }
 }

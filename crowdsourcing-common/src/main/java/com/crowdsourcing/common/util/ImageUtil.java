@@ -157,7 +157,7 @@ public class ImageUtil {
 		BufferedImage image = bytesToImage(bytes);
 		Graphics2D graphics2d = image.createGraphics();
 		graphics2d.setColor(color);
-		graphics2d.setStroke(new BasicStroke(3.0f));
+		graphics2d.setStroke(new BasicStroke(2.0f));
 		graphics2d.drawRect(new Double(x + 0.5).intValue(), new Double(y + 0.5).intValue(), new Double(width + 0.5).intValue(), new Double(height + 0.5).intValue());
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpg", byteArrayOutputStream);

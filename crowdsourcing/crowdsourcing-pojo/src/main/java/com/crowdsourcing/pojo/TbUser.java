@@ -15,7 +15,7 @@ public class TbUser {
 
     private String role;
 
-    private Boolean lock;
+    private Boolean isLock;
 
     private Date gmtCreate;
 
@@ -85,12 +85,12 @@ public class TbUser {
         this.role = role == null ? null : role.trim();
     }
 
-    public Boolean getLock() {
-        return lock;
+    public Boolean getIsLock() {
+        return isLock;
     }
 
-    public void setLock(Boolean lock) {
-        this.lock = lock;
+    public void setIsLock(Boolean isLock) {
+        this.isLock = isLock;
     }
 
     public Date getGmtCreate() {
